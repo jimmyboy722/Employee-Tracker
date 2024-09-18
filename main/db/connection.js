@@ -7,6 +7,7 @@ const pool = new Pool({
   password: process.env.DB_PASSWORD,
   host: "localhost",
   database: "company",
+  port: 5432,
 });
 // EXPORTING THE POOL INSTANCE
 module.exports = pool;
