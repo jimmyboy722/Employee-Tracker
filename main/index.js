@@ -125,7 +125,7 @@ presentQuestions().then((res) => {
       viewTotalSalaryByDepartment();
       break;
     default:
-      exit();
+      end();
   }
 });
 
@@ -485,7 +485,7 @@ function viewTotalSalaryByDepartment() {
     .then(() => loadMainPrompts());
 }
 // EXIT THE PROGRAM
-function exit() {
+function end() {
   console.log("See you next time!");
   process.exit();
 }
