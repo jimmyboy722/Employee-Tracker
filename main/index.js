@@ -1,16 +1,19 @@
 // IMPORTING DEPENDENCIES
-const { prompts } = require("inquirer");
+const { prompt } = require("inquirer");
 const db = require("./db");
-const { default: Choices } = require("inquirer/lib/objects/choices");
+//const { default: Choices } = require("inquirer/lib/objects/choices");
+
+// INVOKING PRESENT QUESTIONS FUNCTION
+presentQuestions();
 
 // PROMPTS FOR USER INPUT
 function presentQuestions() {
-  prompts([
+  prompt([
     {
       type: "list",
       name: "question",
       message: "What would you like to do?",
-      Choices: [
+      choices: [
         {
           name: "View all departments",
           value: "View Departments",
@@ -483,6 +486,6 @@ function viewTotalSalaryByDepartment() {
 }
 // EXIT THE PROGRAM
 function exit() {
-  console.log("Goodbye!");
+  console.log("See you next time!");
   process.exit();
 }
