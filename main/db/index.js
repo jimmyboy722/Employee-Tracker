@@ -21,11 +21,34 @@ class DATABASE {
       "SELECT department.id, department.name FROM department"
     );
   }
+  addDepartment() {
+    return this.query("INSERT INTO department (name) VALUES ($1)", [
+      // THE $1 IS A PLACEHOLDER FOR A PARAMETERIZED QUERY
+      department.name,
+    ]);
+  }
+  deleteDepartment(departmentId) {
+    return this.query("DELETE FROM department WHERE id = $1", [departmentId]);
+  }
   // FUNCITON TO VIEW ALL EMPLOYEES PER ACCEPTANCE CRITERIA AND JOIN WITH ROLE TABLE AND DEPARTMENT TABLE
   viewAllEmployees() {
     return this.query(
       //SQL STATEMENT
       "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary, CONCAT (manager.first_name, ' ', manager.last_name) AS manager FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id LEFT JOIN employee manager ON manager.id = employee.manager_id;"
+    );
+  }
+  // VIEW ALL EMPLOYEES BY MANAGERS
+  viewAllEmployeesByManager(managerId) {
+    return this.query(
+      "SELECT employee.id, employee.first_name, employee.last_name, department.name AS department, role.title FROM employee LEFT JOIN role ON role.id = employee.role_id LEFT JOIN department ON department.id = role.department_id WHERE manager_id = $1;",
+      [managerId]
+    );
+  }
+  // VIEW ALL EMPLOYEES BY DEPARTMENT
+  viewAllEmployeesByDepartment(departmentId) {
+    return this.query(
+      "SELECT employee.id, employee.first_name, employee.last_name, role.title FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id WHERE department.id = $1;",
+      [departmentId]
     );
   }
   // ADDING EMPLOYEES
@@ -79,4 +102,12 @@ class DATABASE {
     return this.query("DELETE FROM role WHERE id = $1", [roleId]);
   }
   // FINDING DEPARTMENTS SALARIES
+  viewTotalSalaryByDepartment() {
+    return this.query(
+      // SELECTING DEPT ID, NAME AND THEN CALCULATE THE TOTAL SALARY FOR EACH ROLE, THEN JOINS ROLE TABLE WITH EMPLOYEE TABLE BASED ON ROLE ID
+      "SELECT department.id, department.name, SUM(role.salary) AS total_salary FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department on role.department_id = department.id GROUP BY department.id, department.name;"
+    );
+  }
 }
+
+module.exports = new DATABASE();
