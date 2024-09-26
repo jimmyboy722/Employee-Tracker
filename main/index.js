@@ -28,7 +28,7 @@ function presentQuestions() {
         },
         {
           name: "View all roles",
-          value: "View all Roles",
+          value: "View all roles",
         },
         {
           name: "Add a role",
@@ -91,6 +91,7 @@ function presentQuestions() {
           deleteDepartment();
           break;
         case "View all roles":
+          console.log("Whaddup!!!!!");
           viewAllRoles();
           break;
         case "Add a role":
@@ -131,11 +132,13 @@ function presentQuestions() {
   // FUNCTIONS TO VIEW ALL DEPARTMENTS, ROLES, AND EMPLOYEES ETC...
   // VIEW ALL DEPARTMENTS
   function viewAllDepartments() {
-    db.viewAllDepartments().then(({ rows }) => {
-      let departments = rows;
-      console.log("\n");
-      console.table(departments);
-    });
+    db.viewAllDepartments()
+      .then(({ rows }) => {
+        let departments = rows;
+        console.log("\n");
+        console.table(departments);
+      })
+      .then(() => presentQuestions());
   }
   // EACH OF THESE FUNCTIONS ESSENTIALLY FETCH DATA FROM THE DATABASE AND PRINTS IT TO THE CONSOLE IN A READABLE TABLE FORMAT
   // ADD DEPARTMENT
@@ -146,42 +149,43 @@ function presentQuestions() {
         message: "What is the title of the department?",
       },
     ]).then((res) => {
-      let dept = res;
-      db.createDepartment(dept)
-        .then(() => console.log(`${dept.name} has been added to the database`))
-        .then(() => loadMainPrompts());
+      db.createDepartment(res)
+        .then(() => console.log(`${res.name} has been added to the database`))
+        .then(() => presentQuestions());
     });
   }
   // DELETE DEPARTMENT
   function deleteDepartment() {
     db.viewAllDepartments().then(({ rows }) => {
       let departments = rows;
-      const deptChoices = departments.map((id, name) => ({
+      const deptChoices = departments.map(({ id, name }) => ({
         name: name,
-        value: id,
+        value: { id, name },
       }));
-    });
 
-    prompt({
-      type: "list",
-      name: "deptId",
-      message:
-        "What department would you like to delete? (Note: This will delete all roles and employees in that department)",
-      choices: deptChoices,
-    }).then((res) => {
-      let dept = res;
-      db.deleteDepartment(dept)
-        .then(() => console.log(`${dept.name} has been deleted`))
-        .then(() => loadMainPrompts());
+      prompt({
+        type: "list",
+        name: "dept",
+        message:
+          "What department would you like to delete? (Note: This will delete all roles and employees in that department)",
+        choices: deptChoices,
+      }).then((res) => {
+        let dept = res.dept;
+        db.deleteDepartment(dept.id)
+          .then(() => console.log(`${dept.name} has been deleted`))
+          .then(() => presentQuestions());
+      });
     });
   }
   // VIEW ALL ROLES
   function viewAllRoles() {
-    db.viewAllRoles().then(({ rows }) => {
-      let roles = rows;
-      console.log("\n");
-      console.table(roles);
-    });
+    db.viewAllRoles()
+      .then(({ rows }) => {
+        let roles = rows;
+        console.log("\n");
+        console.table(roles);
+      })
+      .then(() => presentQuestions());
   }
   // ADD ROLE
   function addRole() {
@@ -212,7 +216,7 @@ function presentQuestions() {
           .then(() =>
             console.log(`${role.title} has been added to the database`)
           )
-          .then(() => loadMainPrompts());
+          .then(() => presentQuestions());
       });
     });
   }
@@ -233,7 +237,7 @@ function presentQuestions() {
       }).then((res) => {
         db.deleteRole(res.role_id)
           .then(() => console.log(`The role has been deleted`))
-          .then(() => loadMainPrompts());
+          .then(() => presentQuestions());
       });
     });
   }
@@ -245,7 +249,7 @@ function presentQuestions() {
         console.log("\n");
         console.table(employees);
       })
-      .then(() => loadMainPrompts());
+      .then(() => presentQuestions());
   }
   // VIEW ALL EMPLOYEES BY MANAGER
   function viewAllEmployeesByManager() {
@@ -277,7 +281,7 @@ function presentQuestions() {
             console.table(employees);
           }
         })
-        .then(() => loadMainPrompts());
+        .then(() => presentQuestions());
     });
   }
   // VIEW ALL EMPLOYEES BY DEPARTMENT
@@ -297,13 +301,13 @@ function presentQuestions() {
           choices: deptChoices,
         },
       ])
-        .then((res) => db.viewAllEmployeesByDepartment(res.departmentID))
+        .then((res) => db.viewAllEmployeesByDepartment(res.departmentId))
         .then(({ rows }) => {
           let employees = rows;
           console.log("\n");
           console.table(employees);
         })
-        .then(() => loadMainPrompts());
+        .then(() => presentQuestions());
     });
   }
   // ADD AN EMPLOYEE
@@ -361,14 +365,14 @@ function presentQuestions() {
                 last_name: last_name,
               };
               // ADDS EMPLOYEE TO DATABASE
-              db.createEmployee(employee)
+              db.addEmployee(employee)
                 .then(() =>
                   console.log(
                     `${first_name} ${last_name} has been added to the database`
                   )
                 )
                 // RETURNS TO MAIN PROMPT FOR THE USER FOR FURTHER OPERATIONS
-                .then(() => loadMainPrompts());
+                .then(() => presentQuestions());
             });
           });
         });
@@ -395,7 +399,7 @@ function presentQuestions() {
       ])
         .then((res) => db.deleteEmployee(res.employeeId))
         .then(() => console.log("Employee has been deleted"))
-        .then(() => loadMainPrompts());
+        .then(() => presentQuestions());
     });
   }
   // UPDATE AN EMPLOYEE ROLE
@@ -433,7 +437,7 @@ function presentQuestions() {
           ]).then((res) => {
             db.updateEmployeeRole(employeeId, res.roleId)
               .then(() => console.log("Employee role has been updated"))
-              .then(() => loadMainPrompts());
+              .then(() => presentQuestions());
           });
         });
       });
@@ -476,7 +480,7 @@ function presentQuestions() {
           ]).then((res) => {
             db.updateEmployeeManager(employeeId, res.managerId)
               .then(() => console.log("Employee manager has been updated"))
-              .then(() => loadMainPrompts());
+              .then(() => presentQuestions());
           });
         });
       });
@@ -489,7 +493,7 @@ function presentQuestions() {
         console.log("\n");
         console.table(rows);
       })
-      .then(() => loadMainPrompts());
+      .then(() => presentQuestions());
   }
   // EXIT THE PROGRAM
   function end() {

@@ -1,5 +1,6 @@
 // IMPORTING THE PG MODULE AND EXTRACTING THE POOL CLASS FOR INTERACTING WITH THE POSTGRESQL DATABASE//
 const { Pool } = require("pg");
+const dotenv = require("dotenv").config();
 
 // CREATING NEW POOL CLASS/OBJECT //
 const pool = new Pool({

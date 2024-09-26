@@ -1,15 +1,15 @@
 -- SEEDING THE TABLES WITH THE DATA BASED ON VALUES SET UP IN THE SCHEMA --
 
 -- DEPARTMENT TABLE DATA --
-INSERT INTO department(id, name)
+INSERT INTO department(name)
 VALUES 
-(1, 'Sales'),
-(2, 'Engineering'),
-(3, 'Financing'),
-(4, 'Legal');
+('Sales'),
+('Engineering'),
+('Financing'),
+('Legal');
 
 -- ROLE TABLE DATA (gave software engineers the most :) ) --
-INSERT INTO role(job_title, salary, department_id)
+INSERT INTO role(title, salary, department_id)
 VALUES
 ('Sales Lead', 100000, 1),
 ('Salesperson', 80000, 1),
@@ -23,8 +23,8 @@ VALUES
 -- EMPLOYEE TABLE DATA --
 INSERT INTO employee(role_id, first_name, last_name, manager_id)
 VALUES
-(1, 'James', 'Eckman'1),
-(2, 'Christopher', 'Stonaker'2),
+(1, 'James', 'Eckman',1),
+(2, 'Christopher', 'Stonaker',2),
 (3, 'Lisa', 'Rodenbaugh', 3),
 (4, 'Ollie', 'Garlinghouse', 4),
 (5, 'Nick', 'Boulanger', 5),

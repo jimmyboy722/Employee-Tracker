@@ -21,7 +21,7 @@ class DATABASE {
       "SELECT department.id, department.name FROM department"
     );
   }
-  addDepartment() {
+  createDepartment(department) {
     return this.query("INSERT INTO department (name) VALUES ($1)", [
       // THE $1 IS A PLACEHOLDER FOR A PARAMETERIZED QUERY
       department.name,
@@ -80,17 +80,18 @@ class DATABASE {
   // FIND ALL MANAGERS
   viewAllManagers(employeeId) {
     return this.query(
-      "SELECT id, first_name, last_name FROM employee WHERE id != $1"
+      "SELECT id, first_name, last_name FROM employee WHERE id != $1",
+      [employeeId]
     );
   }
   // FUNCTION TO VIEW ALL ROLES PER ACCEPTANCE CRITERIA
   viewAllRoles() {
     return this.query(
-      "SELECT role.id, role.job_title, department.name AS department, role.salary FROM role LEFT JOIN department on role.department_id = department.id;"
+      "SELECT role.id, role.title, department.name AS department, role.salary FROM role LEFT JOIN department on role.department_id = department.id;"
     );
   }
   // ADDING ROLES
-  addRole(role) {
+  createRole(role) {
     const { title, salary, department_id } = role;
     return this.query(
       "INSERT INTO role (title, salary, department_id) VALUES ($1, $2, $3)",
