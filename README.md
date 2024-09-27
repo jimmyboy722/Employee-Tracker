@@ -74,4 +74,4 @@ The following resources will help you as they helped me understand and utilize S
 ---
 ## <ins>Links</ins>
 
-Here is a [link]() to a video walkthough demonstration of this application.
+Here is a [link](https://watch.screencastify.com/v/GblayeDH7A5gVoXCJfWL) to a video walkthough demonstration of this application.
